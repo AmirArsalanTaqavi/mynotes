@@ -1,16 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mynotes/firebase_options.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -32,7 +33,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login Page"),
+        title: const Text("Register Page"),
       ),
       body: FutureBuilder(
         future: Firebase.initializeApp(
@@ -64,17 +65,21 @@ class _LoginViewState extends State<LoginView> {
                       final password = _password.text;
                       try {
                         final userCredential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
+                            .createUserWithEmailAndPassword(
                                 email: email, password: password);
                         print(userCredential);
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'invalid-credential') {
+                        if (e.code == 'weak-passworf') {
+                          print('Weak Password');
+                        } else if (e.code == 'email-already-in-use') {
                           print(
-                              'Either the username or the password is wrong!');
+                              'This email has been already registered with another user.');
+                        } else if (e.code == 'invalid-email') {
+                          print('Please enter a valid email address');
                         }
                       }
                     },
-                    child: const Text('Login'),
+                    child: const Text('Register'),
                   ),
                 ],
               );
