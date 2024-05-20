@@ -15,6 +15,10 @@ void main() {
         useMaterial3: true,
       ),
       home: const HomePage(),
+      routes: {
+        '/login/': (context) => const LoginView(),
+        '/register/': (context) => const RegisterView(),
+      },
     ),
   );
 }
@@ -34,17 +38,16 @@ class HomePage extends StatelessWidget {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
-              if (user?.emailVerified ?? false) {
-                //   const verified = Text('you are verified');
-                //   return verified;
-              } else {
-                // const notVerified =
-                //     Text('not verifed yet. please verify your email.');
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const VerifyEnailView()));
-              }
-              return const Text('done');
+              // final user = FirebaseAuth.instance.currentUser;
+              // if (user?.emailVerified ?? false) {
+              //   //   const verified = Text('you are verified');
+              //   //   return verified;
+              // } else {
+              //   return const Text('not verifed yet. please verify your email.');
+              //   // Navigator.of(context).push(MaterialPageRoute(
+              //   //     builder: (context) => const VerifyEnailView()));
+              // }
+              return const LoginView();
             default:
               return const Text('Loading...');
           }
