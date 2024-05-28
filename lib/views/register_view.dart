@@ -33,7 +33,7 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Register Page"),
+        title: const Text("Register"),
       ),
       body: FutureBuilder(
         future: Firebase.initializeApp(
@@ -90,7 +90,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ],
               );
             default:
-              return const Text('Loading...');
+              return const CircularProgressIndicator();
           }
         },
       ),

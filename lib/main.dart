@@ -28,31 +28,26 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-      ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              // final user = FirebaseAuth.instance.currentUser;
-              // if (user?.emailVerified ?? false) {
-              //   //   const verified = Text('you are verified');
-              //   //   return verified;
-              // } else {
-              //   return const Text('not verifed yet. please verify your email.');
-              //   // Navigator.of(context).push(MaterialPageRoute(
-              //   //     builder: (context) => const VerifyEnailView()));
-              // }
-              return const LoginView();
-            default:
-              return const Text('Loading...');
-          }
-        },
-      ),
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            // final user = FirebaseAuth.instance.currentUser;
+            // if (user?.emailVerified ?? false) {
+            //   //   const verified = Text('you are verified');
+            //   //   return verified;
+            // } else {
+            //   return const Text('not verifed yet. please verify your email.');
+            //   // Navigator.of(context).push(MaterialPageRoute(
+            //   //     builder: (context) => const VerifyEnailView()));
+            // }
+            return const LoginView();
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }
