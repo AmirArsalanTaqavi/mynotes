@@ -68,33 +68,35 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MainUI'),
-        actions: [
-          PopupMenuButton<MenuAction>(
-            onSelected: (value) async {
-              switch (value) {
-                case MenuAction.logout:
-                  final shouldLogout = await showLogOutDialog(context);
-                  if (shouldLogout) {
-                    await FirebaseAuth.instance.signOut();
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil(loginRoute, (_) => false);
-                  }
-              }
-            },
-            itemBuilder: (context) {
-              return const [
-                PopupMenuItem<MenuAction>(
-                    value: MenuAction.logout, child: Text('logout'))
-              ];
-            },
-          )
-        ],
-      ),
-      body: const Text('Hello World'),
-    );
+        appBar: AppBar(
+          title: const Text('MainUI'),
+          actions: [
+            PopupMenuButton<MenuAction>(
+              onSelected: (value) async {
+                switch (value) {
+                  case MenuAction.logout:
+                    final shouldLogout = await showLogOutDialog(context);
+                    if (shouldLogout) {
+                      await FirebaseAuth.instance.signOut();
+                      // ignore: use_build_context_synchronously
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil(loginRoute, (_) => false);
+                    }
+                }
+              },
+              itemBuilder: (context) {
+                return const [
+                  PopupMenuItem<MenuAction>(
+                      value: MenuAction.logout, child: Text('logout'))
+                ];
+              },
+            )
+          ],
+        ),
+        body: const Padding(
+          padding: EdgeInsets.only(left: 10.0),
+          child: SafeArea(child: Text('Hello world')),
+        ));
   }
 }
 
