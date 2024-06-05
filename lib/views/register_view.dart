@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/firebase_options.dart';
-import 'dart:developer' as devtools show log;
+
+import 'package:mynotes/utilities/show_error_snackbar.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -65,19 +68,38 @@ class _RegisterViewState extends State<RegisterView> {
                       final email = _email.text;
                       final password = _password.text;
                       try {
-                        final userCredential = await FirebaseAuth.instance
+                        await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
-                                email: email, password: password);
-                        devtools.log(userCredential.toString());
+                          email: email,
+                          password: password,
+                        );
+                        final user = FirebaseAuth.instance.currentUser;
+                        await user?.sendEmailVerification();
+                        Navigator.of(context).pushNamed(verifyEmailRoute);
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-passworf') {
-                          devtools.log('Weak Password');
+                          showSnackBar(context, 'Weak Password');
                         } else if (e.code == 'email-already-in-use') {
-                          devtools.log(
-                              'This email has been already registered with another user.');
+                          showSnackBar(
+                            context,
+                            'This is email has been already registered',
+                          );
                         } else if (e.code == 'invalid-email') {
-                          devtools.log('Please enter a valid email address');
+                          showSnackBar(
+                            context,
+                            'Please Enter a valid email address',
+                          );
+                        } else {
+                          showSnackBar(
+                            context,
+                            'Error ${e.code}',
+                          );
                         }
+                      } catch (e) {
+                        showSnackBar(
+                          context,
+                          e.toString(),
+                        );
                       }
                     },
                     child: const Text('Register'),

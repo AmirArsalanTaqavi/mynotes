@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/utilities/show_error_snackbar.dart';
-import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -65,12 +64,21 @@ class _LoginViewState extends State<LoginView> {
                   email: email,
                   password: password,
                 );
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  notesRoute,
-                  (route) => false,
-                );
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  // email verifed
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    notesRoute,
+                    (route) => false,
+                  );
+                } else {
+                  // not verified
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (route) => false,
+                  );
+                }
               } on FirebaseAuthException catch (e) {
-                devtools.log('FirebaseAuthException: ${e.code} - ${e.message}');
                 if (e.code == 'user-not-found') {
                   showSnackBar(
                     context,
@@ -88,7 +96,6 @@ class _LoginViewState extends State<LoginView> {
                   );
                 }
               } catch (e) {
-                devtools.log('Exception: ${e.toString()}');
                 showSnackBar(
                   context,
                   e.toString(),
