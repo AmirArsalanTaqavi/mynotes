@@ -1,9 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:mynotes/constants/routes.dart';
+import 'package:mynotes/services/auth/auth_execeptions.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/utilities/show_error_snackbar.dart';
 
 class LoginView extends StatefulWidget {
@@ -60,12 +61,12 @@ class _LoginViewState extends State<LoginView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   // email verifed
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
@@ -78,27 +79,20 @@ class _LoginViewState extends State<LoginView> {
                     (route) => false,
                   );
                 }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found') {
-                  showSnackBar(
-                    context,
-                    'Username not found',
-                  );
-                } else if (e.code == 'wrong-password') {
-                  showSnackBar(
-                    context,
-                    'Wrong Password',
-                  );
-                } else {
-                  showSnackBar(
-                    context,
-                    'Error: ${e.code}',
-                  );
-                }
-              } catch (e) {
-                showSnackBar(
+              } on UserNotFoundAuthException {
+                await showSnackBar(
                   context,
-                  e.toString(),
+                  'Username not found',
+                );
+              } on WrongPasswordAuthException {
+                await showSnackBar(
+                  context,
+                  'Wrong Password',
+                );
+              } on GenericAuthException {
+                await showSnackBar(
+                  context,
+                  'Authentication error',
                 );
               }
             },

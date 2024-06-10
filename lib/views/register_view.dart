@@ -1,10 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
-import 'package:mynotes/firebase_options.dart';
+import 'package:mynotes/services/auth/auth_execeptions.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 
 import 'package:mynotes/utilities/show_error_snackbar.dart';
 
@@ -40,8 +39,7 @@ class _RegisterViewState extends State<RegisterView> {
         title: const Text("Register"),
       ),
       body: FutureBuilder(
-        future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform),
+        future: AuthService.firebase().initialize(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
@@ -68,48 +66,43 @@ class _RegisterViewState extends State<RegisterView> {
                       final email = _email.text;
                       final password = _password.text;
                       try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
+                        await AuthService.firebase().createUser(
                           email: email,
                           password: password,
                         );
-                        final user = FirebaseAuth.instance.currentUser;
-                        await user?.sendEmailVerification();
+                        AuthService.firebase().sendEmailVerification();
                         Navigator.of(context).pushNamed(verifyEmailRoute);
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'weak-passworf') {
-                          showSnackBar(context, 'Weak Password');
-                        } else if (e.code == 'email-already-in-use') {
-                          showSnackBar(
-                            context,
-                            'This is email has been already registered',
-                          );
-                        } else if (e.code == 'invalid-email') {
-                          showSnackBar(
-                            context,
-                            'Please Enter a valid email address',
-                          );
-                        } else {
-                          showSnackBar(
-                            context,
-                            'Error ${e.code}',
-                          );
-                        }
-                      } catch (e) {
+                      } on WeakPasswordAuthException {
+                        await showSnackBar(
+                          context,
+                          'Weak Password',
+                        );
+                      } on EmailAlreadyInUseAuthException {
+                        await showSnackBar(
+                          context,
+                          'This is email has been already registered',
+                        );
+                      } on InvalidEmailAuthException {
+                        await showSnackBar(
+                          context,
+                          'Please Enter a valid email address',
+                        );
+                      } on GenericAuthException {
                         showSnackBar(
                           context,
-                          e.toString(),
+                          'Some Error has happened',
                         );
                       }
                     },
                     child: const Text('Register'),
                   ),
                   TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            loginRoute, (route) => false);
-                      },
-                      child: const Text('Already have a user? login here'))
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          loginRoute, (route) => false);
+                    },
+                    child: const Text('Already have a user? login here'),
+                  )
                 ],
               );
             default:

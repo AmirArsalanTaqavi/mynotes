@@ -23,10 +23,10 @@ import 'package:flutter/material.dart';
 //   );
 // }
 
-void showSnackBar(
+Future<void> showSnackBar(
   BuildContext context,
   String message,
-) {
+) async {
   final snackBar = SnackBar(
     content: Text(message),
     duration: const Duration(seconds: 3),
