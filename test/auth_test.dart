@@ -4,11 +4,16 @@ import 'package:test/test.dart';
 
 void main() {}
 
-class MockAuthProvider implements AuthProvider {
-var _isInitialized = false;
+class NotInitializedException implements Exception {}
 
+class MockAuthProvider implements AuthProvider {
+  var _isInitialized = false;
+  bool get isInitialized => _isInitialized;
   @override
-  Future<AuthUser> createUser({required String email, required String password}) {
+  Future<AuthUser> createUser({
+    required String email,
+    required String password,
+  }) {
     // TODO: implement createUser
     throw UnimplementedError();
   }
@@ -19,12 +24,15 @@ var _isInitialized = false;
 
   @override
   Future<void> initialize() {
-    // TODO: implement initialize
+    if (!isInitialized) throw NotInitializedException();
     throw UnimplementedError();
   }
 
   @override
-  Future<AuthUser> logIn({required String email, required String password}) {
+  Future<AuthUser> logIn({
+    required String email,
+    required String password,
+  }) {
     // TODO: implement logIn
     throw UnimplementedError();
   }
