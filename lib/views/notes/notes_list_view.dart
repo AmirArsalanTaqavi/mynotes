@@ -6,11 +6,12 @@ typedef DeleteNoteCallback = void Function(DatabaseNote note);
 
 class NotesListView extends StatelessWidget {
   final List<DatabaseNote> notes;
-  final DeleteNoteCallback onDelete;
+  final DeleteNoteCallback onDeleteNote;
+
   const NotesListView({
     super.key,
     required this.notes,
-    required this.onDelete,
+    required this.onDeleteNote,
   });
 
   @override
@@ -30,7 +31,7 @@ class NotesListView extends StatelessWidget {
             onPressed: () async {
               final shouldDelete = await showDeleteDialog(context);
               if (shouldDelete) {
-                onDelete(note);
+                onDeleteNote(note);
               }
             },
             icon: const Icon(Icons.delete),
