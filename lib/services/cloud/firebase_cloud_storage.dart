@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mynotes/services/cloud/cloud_note.dart';
-import 'package:mynotes/services/cloud/cloud_storage_constans.dart';
+import 'package:mynotes/services/cloud/cloud_storage_constants.dart';
 import 'package:mynotes/services/cloud/cloud_storage_exceptions.dart';
 
 class FirebaseCloudStorage {
@@ -10,7 +10,7 @@ class FirebaseCloudStorage {
     try {
       await notes.doc(documentId).delete();
     } catch (e) {
-      throw CouldNotDeleteNoteExceptions();
+      throw CouldNotDeleteNoteException();
     }
   }
 
@@ -21,7 +21,7 @@ class FirebaseCloudStorage {
     try {
       await notes.doc(documentId).update({textFieldName: text});
     } catch (e) {
-      throw CouldNotUpdateAllNoteExceptions();
+      throw CouldNotUpdateNoteException();
     }
   }
 
@@ -33,13 +33,16 @@ class FirebaseCloudStorage {
   Future<Iterable<CloudNote>> getNotes({required String ownerUserId}) async {
     try {
       return await notes
-          .where(ownerUserIdFieldName, isEqualTo: ownerUserId)
+          .where(
+            ownerUserIdFieldName,
+            isEqualTo: ownerUserId,
+          )
           .get()
-          .then((value) {
-        return value.docs.map((doc) => CloudNote.fromSnapshot(doc));
-      });
+          .then(
+            (value) => value.docs.map((doc) => CloudNote.fromSnapshot(doc)),
+          );
     } catch (e) {
-      throw CouldNotGetAllNoteException();
+      throw CouldNotGetAllNotesException();
     }
   }
 
