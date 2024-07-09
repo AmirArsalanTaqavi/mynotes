@@ -1,13 +1,12 @@
 import 'package:mynotes/services/auth/auth_provider.dart';
 import 'package:mynotes/services/auth/auth_user.dart';
-import 'package:test/test.dart';
 
 void main() {}
 
 class NotInitializedException implements Exception {}
 
 class MockAuthProvider implements AuthProvider {
-  var _isInitialized = false;
+  final _isInitialized = false;
   bool get isInitialized => _isInitialized;
   @override
   Future<AuthUser> createUser({
