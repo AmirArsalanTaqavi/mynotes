@@ -177,7 +177,7 @@ class CounterBloc extends Bloc<CounterEvent, CounterState> {
     on<IncrementEvent>(
       (event, emit) {
         final integer = int.tryParse(event.value);
-        if (integer != null) {
+        if (integer == null) {
           emit(
             CounterStateInvalidNumber(
               invalidValue: event.value,
@@ -185,14 +185,14 @@ class CounterBloc extends Bloc<CounterEvent, CounterState> {
             ),
           );
         } else {
-          emit(CounterStateValid(state.value + integer!));
+          emit(CounterStateValid(state.value + integer));
         }
       },
     );
     on<DecrementEvent>(
       (event, emit) {
         final integer = int.tryParse(event.value);
-        if (integer != null) {
+        if (integer == null) {
           emit(
             CounterStateInvalidNumber(
               invalidValue: event.value,
@@ -200,7 +200,7 @@ class CounterBloc extends Bloc<CounterEvent, CounterState> {
             ),
           );
         } else {
-          emit(CounterStateValid(state.value - integer!));
+          emit(CounterStateValid(state.value - integer));
         }
       },
     );
