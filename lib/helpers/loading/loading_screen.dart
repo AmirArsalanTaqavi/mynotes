@@ -6,11 +6,31 @@ import 'package:mynotes/helpers/loading/loading_screen_controller.dart';
 class LoadingScreen {
   factory LoadingScreen() => _shared;
   static final LoadingScreen _shared = LoadingScreen._sharedInstance();
+
   LoadingScreen._sharedInstance();
 
   LoadingScreenController? controller;
 
-  LoadingScreenControllershowOverlay({
+  void show({
+    required BuildContext context,
+    required String text,
+  }) {
+    if (controller?.update(text) ?? false) {
+      return;
+    } else {
+      controller = showOverlay(
+        context: context,
+        text: text,
+      );
+    }
+  }
+
+  void hide() {
+    controller?.close;
+    controller = null;
+  }
+
+  LoadingScreenController showOverlay({
     required BuildContext context,
     required String text,
   }) {
@@ -68,5 +88,16 @@ class LoadingScreen {
         );
       },
     );
+
+    state.insert(overlay);
+
+    return LoadingScreenController(close: () {
+      _text.close();
+      overlay.remove();
+      return true;
+    }, update: (text) {
+      _text.add(text);
+      return true;
+    });
   }
 }
