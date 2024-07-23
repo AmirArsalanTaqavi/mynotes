@@ -34,7 +34,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           ),
           TextButton(
             onPressed: () {
-              context.read<AuthBloc>().add(const AuthEventLogout());
+              context.read<AuthBloc>().add(const AuthEventLogOut());
             },
             child: const Text('Cancel/Sign out'),
           )

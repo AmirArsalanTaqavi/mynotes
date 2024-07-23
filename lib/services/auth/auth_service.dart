@@ -1,6 +1,6 @@
 import 'package:mynotes/services/auth/auth_provider.dart';
 import 'package:mynotes/services/auth/auth_user.dart';
-import 'package:mynotes/services/auth/firebase_auth_provoder.dart';
+import 'package:mynotes/services/auth/firebase_auth_provider.dart';
 
 class AuthService implements AuthProvider {
   final AuthProvider provider;
@@ -20,6 +20,7 @@ class AuthService implements AuthProvider {
 
   @override
   AuthUser? get currentUser => provider.currentUser;
+
   @override
   Future<AuthUser> logIn({
     required String email,

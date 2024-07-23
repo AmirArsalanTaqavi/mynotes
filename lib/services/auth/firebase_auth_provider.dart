@@ -11,7 +11,8 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<void> initialize() async {
     await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 
   @override
@@ -61,7 +62,6 @@ class FirebaseAuthProvider implements AuthProvider {
     required String password,
   }) async {
     try {
-      await Future.delayed(const Duration(seconds: 1)); // just because i can :)
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -73,14 +73,39 @@ class FirebaseAuthProvider implements AuthProvider {
         throw UserNotLoggedInAuthException();
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        throw UserNotFoundAuthException();
-      } else if (e.code == 'wrong-password') {
-        throw WrongPasswordAuthException();
-      } else {
-        throw GenericAuthException();
+      switch (e.code) {
+        case "ERROR_EMAIL_ALREADY_IN_USE":
+        case "account-exists-with-different-credential":
+        case "email-already-in-use":
+          throw EmailAlreadyInUseAuthException();
+
+        case "ERROR_WRONG_PASSWORD":
+        case "wrong-password":
+          throw WrongPasswordAuthException();
+
+        case "ERROR_USER_NOT_FOUND":
+        case "user-not-found":
+          throw UserNotFoundAuthException();
+
+        case "ERROR_USER_DISABLED":
+        case "user-disabled":
+          throw UserDisabledAuthException();
+
+        case "ERROR_TOO_MANY_REQUESTS":
+          throw TooManyRequestsAuthException();
+
+        case "ERROR_OPERATION_NOT_ALLOWED":
+        case "operation-not-allowed":
+          throw OperationNotAllowedAuthException();
+
+        case "ERROR_INVALID_EMAIL":
+        case "invalid-email":
+          throw InvalidEmailAuthException();
+
+        default:
+          throw GenericAuthException();
       }
-    } catch (e) {
+    } catch (_) {
       throw GenericAuthException();
     }
   }
