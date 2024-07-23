@@ -105,8 +105,6 @@ class FirebaseAuthProvider implements AuthProvider {
         default:
           throw GenericAuthException();
       }
-    } catch (_) {
-      throw GenericAuthException();
     }
   }
 
@@ -127,6 +125,17 @@ class FirebaseAuthProvider implements AuthProvider {
       await user.sendEmailVerification();
     } else {
       throw UserNotLoggedInAuthException();
+    }
+  }
+
+  @override
+  Future<void> sendPasswordReset({required String toEmail}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: toEmail);
+    } on FirebaseAuthException catch (e) {
+      handleAuthException(e);
+    } catch (_) {
+      throw GenericAuthException();
     }
   }
 }

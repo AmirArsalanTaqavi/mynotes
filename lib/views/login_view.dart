@@ -42,6 +42,17 @@ class _LoginViewState extends State<LoginView> {
             await showSnackBar(context, 'Wrong credentials');
           } else if (state.exception is GenericAuthException) {
             await showSnackBar(context, 'Authentication error');
+          } else if (state.exception is EmailAlreadyInUseAuthException) {
+            await showSnackBar(context, 'Email already in use');
+          } else if (state.exception is UserDisabledAuthException) {
+            await showSnackBar(context, 'User disabled');
+          } else if (state.exception is TooManyRequestsAuthException) {
+            await showSnackBar(
+                context, 'Too many requests. Please try again later');
+          } else if (state.exception is OperationNotAllowedAuthException) {
+            await showSnackBar(context, 'Operation not allowed');
+          } else if (state.exception is InvalidEmailAuthException) {
+            await showSnackBar(context, 'Invalid email');
           }
         }
       },
