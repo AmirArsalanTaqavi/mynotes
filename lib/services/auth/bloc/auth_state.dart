@@ -20,10 +20,11 @@ class AuthStateForgotPassword extends AuthState {
   final Exception? exception;
   final bool hasSentEmail;
 
-  const AuthStateForgotPassword(
-      {required this.exception,
-      required this.hasSentEmail,
-      required super.isLoading});
+  const AuthStateForgotPassword({
+    required this.exception,
+    required this.hasSentEmail,
+    required super.isLoading,
+  });
 }
 
 class AuthStateRegistering extends AuthState {

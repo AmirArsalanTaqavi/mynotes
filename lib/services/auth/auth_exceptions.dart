@@ -26,7 +26,8 @@ class TooManyRequestsAuthException implements Exception {}
 class OperationNotAllowedAuthException implements Exception {}
 
 // Exceptions
-void handleAuthException(FirebaseAuthException e) {
+
+void handleFirebaseAuthException(FirebaseAuthException e) {
   switch (e.code) {
     case "ERROR_EMAIL_ALREADY_IN_USE":
     case "account-exists-with-different-credential":

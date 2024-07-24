@@ -37,22 +37,29 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) async {
         if (state is AuthStateLoggedOut) {
           if (state.exception is UserNotFoundAuthException) {
-            await showSnackBar(context, 'User not found');
+            await showSnackBar(
+                context, 'No account found with that email. Please sign up.');
           } else if (state.exception is WrongPasswordAuthException) {
-            await showSnackBar(context, 'Wrong credentials');
+            await showSnackBar(
+                context, 'Incorrect password. Please try again.');
           } else if (state.exception is GenericAuthException) {
-            await showSnackBar(context, 'Authentication error');
+            await showSnackBar(
+                context, 'An unexpected error occurred. Please try again.');
           } else if (state.exception is EmailAlreadyInUseAuthException) {
-            await showSnackBar(context, 'Email already in use');
+            await showSnackBar(context,
+                'This email is already registered. Please use a different email.');
           } else if (state.exception is UserDisabledAuthException) {
-            await showSnackBar(context, 'User disabled');
+            await showSnackBar(context,
+                'This account has been disabled. Please contact support.');
           } else if (state.exception is TooManyRequestsAuthException) {
             await showSnackBar(
-                context, 'Too many requests. Please try again later');
+                context, 'Too many login attempts. Please try again later.');
           } else if (state.exception is OperationNotAllowedAuthException) {
-            await showSnackBar(context, 'Operation not allowed');
+            await showSnackBar(context,
+                'This operation is not allowed. Please contact support.');
           } else if (state.exception is InvalidEmailAuthException) {
-            await showSnackBar(context, 'Invalid email');
+            await showSnackBar(context,
+                'The email address is not valid. Please check and try again.');
           }
         }
       },
@@ -90,6 +97,12 @@ class _LoginViewState extends State<LoginView> {
                     );
               },
               child: const Text('Login'),
+            ),
+            TextButton(
+              onPressed: () async {
+                context.read<AuthBloc>().add(const AuthEventForgotPassword());
+              },
+              child: const Text('Forgot Password?'),
             ),
             TextButton(
                 onPressed: () {
