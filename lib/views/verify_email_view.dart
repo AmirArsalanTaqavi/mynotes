@@ -45,3 +45,6 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     );
   }
 }
+void String Text{
+  print('test');
+}
