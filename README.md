@@ -22,6 +22,6 @@ A robust, cross-platform note-taking application built with **Flutter** and **Fi
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/mynotes.git](https://github.com/YOUR_USERNAME/mynotes.git)
+   git clone [https://github.com/AmirArsalanTaqavi/mynotes.git](https://github.com/AmirArsalanTaqavi/mynotes.git)
    cd mynotes
    ```
