@@ -103,6 +103,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                   'Can not share a empty note!',
                 );
               } else {
+                // ignore: deprecated_member_use
                 Share.share(text);
               }
             },
